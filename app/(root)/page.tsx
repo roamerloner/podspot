@@ -15,7 +15,7 @@ const Home = () => {
     <div className='mt-9 flex flex-col gap-9 md:overflow-hidden'>
       <section className='flex flex-col gap-5'>
         <h1 className='text-20 font-bold text-white-1'>Trending Podcast</h1>
-        //delete this div later after making it fully dynamic
+        {/* delete this div later after making it fully dynamic */}
         <div className='podcast_grid'>
           {podcastData.map(({
             id,
@@ -35,7 +35,7 @@ const Home = () => {
           ))}
         </div>
 
-        //dynamic
+        {/* dynamic */}
         <div className='podcast_grid'>
           {trendingPodcasts?.map(({
             _id,
