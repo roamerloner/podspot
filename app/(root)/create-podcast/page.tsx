@@ -135,7 +135,7 @@ return (
             </SelectTrigger>
             <SelectContent className="text-16 border-none bg-black-1 font-bold text-white-1 focus-visible:ring-offset-red-500">
               {voiceCategories.map((category) => (
-                <SelectItem key={category} value={category} className="capitalize focus:bg-orange-1">
+                <SelectItem key={category} value={category} className="capitalize focus:bg-red-500">
                   {category}
                 </SelectItem>
               ))}
