@@ -1,4 +1,5 @@
 'use client'
+
 import EmptyState from '@/components/EmptyState'
 import LoaderSpinner from '@/components/LoaderSpinner'
 import PodcastCard from '@/components/PodcastCard'
@@ -11,6 +12,9 @@ import Image from 'next/image'
 import React from 'react'
 
 const PodcastDetails = ({ params: { podcastId } }: { params: { podcastId: Id<'podcasts'> } }) => {
+  if (!podcastId) {
+    return <EmptyState title="Invalid Podcast ID" buttonLink="/discover" buttonText="Discover more podcasts" />;
+  }
   const { user } = useUser();
 
   const podcast = useQuery(api.podcasts.getPodcastById, { podcastId })

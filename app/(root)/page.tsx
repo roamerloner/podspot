@@ -16,7 +16,7 @@ const Home = () => {
       <section className='flex flex-col gap-5'>
         <h1 className='text-20 font-bold text-white-1'>Trending Podcast</h1>
         {/* delete this div later after making it fully dynamic */}
-        <div className='podcast_grid'>
+        {/* <div className='podcast_grid'>
           {podcastData.map(({
             id,
             title,
@@ -33,7 +33,7 @@ const Home = () => {
             />
             
           ))}
-        </div>
+        </div> */}
 
         {/* dynamic */}
         <div className='podcast_grid'>
@@ -46,10 +46,10 @@ const Home = () => {
 
             <PodcastCard 
             key={_id}
-            imgUrl={imageUrl}
+            imgUrl={imageUrl!}
             title={podcastTitle}
             description={podcastDescription}
-            podcastId={id}
+            podcastId={_id}
             />
             
           ))}

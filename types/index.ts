@@ -28,13 +28,13 @@ export interface TopPodcastersProps {
 export interface PodcastProps {
   _id: Id<"podcasts">;
   _creationTime: number;
-  audioStorageId: Id<"_storage"> | null;
+  audioStorageId: Id<"_storage"> | "";
   user: Id<"users">;
   podcastTitle: string;
   podcastDescription: string;
-  audioUrl: string | null;
-  imageUrl: string | null;
-  imageStorageId: Id<"_storage"> | null;
+  audioUrl: string | "";
+  imageUrl: string | "";
+  imageStorageId: Id<"_storage"> | "";
   author: string;
   authorId: string;
   authorImageUrl: string;
@@ -43,6 +43,7 @@ export interface PodcastProps {
   voiceType: string;
   audioDuration: number;
   views: number;
+  audio: string;
 }
 
 export interface ProfilePodcastProps {
@@ -54,15 +55,29 @@ export interface GeneratePodcastProps {
   voiceType: string;
   setAudio: Dispatch<SetStateAction<string>>;
   audio: string;
-  setAudioStorageId: Dispatch<SetStateAction<Id<"_storage"> | null>>;
+  setAudioStorageId: Dispatch<SetStateAction<Id<"_storage"> | "">>;
   voicePrompt: string;
   setVoicePrompt: Dispatch<SetStateAction<string>>;
   setAudioDuration: Dispatch<SetStateAction<number>>;
+  audioPrompt: string;
+  setAudioPrompt: React.Dispatch<React.SetStateAction<string>>;
 }
+
+//This is another persons type
+// export interface GeneratePodcastProps {
+//   voiceType: string;
+//   voiceProvider: string;
+//   setAudioUrl: Dispatch<SetStateAction<string>>;
+//   audioUrl: string;
+//   setAudioStorageId: Dispatch<SetStateAction<Id<"_storage"> | null>>;
+//   voicePrompt: string;
+//   setVoicePrompt: Dispatch<SetStateAction<string>>;
+//   setAudioDuration: Dispatch<SetStateAction<number>>;
+// }
 
 export interface GenerateThumbnailProps {
   setImage: Dispatch<SetStateAction<string>>;
-  setImageStorageId: Dispatch<SetStateAction<Id<"_storage"> | null>>;
+  setImageStorageId: Dispatch<SetStateAction<Id<"_storage"> | "">>;
   image: string;
   imagePrompt: string;
   setImagePrompt: Dispatch<SetStateAction<string>>;
@@ -85,7 +100,7 @@ export interface PodcastDetailPlayerProps {
   author: string;
   isOwner: boolean;
   imageUrl: string;
-  podcastId: Id<"podcasts">;
+  podcastId: Id<'podcasts'>;
   imageStorageId: Id<"_storage">;
   audioStorageId: Id<"_storage">;
   authorImageUrl: string;
@@ -101,8 +116,8 @@ export interface AudioProps {
 }
 
 export interface AudioContextType {
-  audio: AudioProps | undefined;
-  setAudio: React.Dispatch<React.SetStateAction<AudioProps | undefined>>;
+  audio: AudioProps | "";
+  setAudio: React.Dispatch<React.SetStateAction<AudioProps |"">>;
 }
 
 export interface PodcastCardProps {

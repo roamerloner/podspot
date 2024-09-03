@@ -100,6 +100,7 @@ export const getPodcastById = query({
   },
 });
 
+
 // this query will get the podcasts based on the views of the podcast , which we are showing in the Trending Podcasts section.
 export const getTrendingPodcasts = query({
   handler: async (ctx) => {
