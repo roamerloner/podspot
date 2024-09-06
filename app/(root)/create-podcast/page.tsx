@@ -56,6 +56,7 @@ const CreatePodcast = () => {
   const [voicePrompt, setVoicePrompt] = useState('');
   
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [audioPrompt, setAudioPrompt] = useState('');
 
   const createPodcast = useMutation(api.podcasts.createPodcast)
 
@@ -176,6 +177,7 @@ const CreatePodcast = () => {
                 voicePrompt={voicePrompt}
                 setVoicePrompt={setVoicePrompt}
                 setAudioDuration={setAudioDuration}
+                setAudioPrompt={setAudioPrompt}
               />
 
               <GenerateThumbnail 

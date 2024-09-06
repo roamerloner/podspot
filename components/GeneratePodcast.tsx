@@ -130,6 +130,7 @@ import { Label } from './ui/label';
 import { Loader } from 'lucide-react';
 import Image from 'next/image';
 import { voiceDetails } from '@/constants';
+import { cn } from '@/lib/utils';
 
 // interface GeneratePodcastProps {
 //   setAudio: React.Dispatch<React.SetStateAction<string>>;
@@ -146,7 +147,7 @@ const GeneratePodcast: React.FC<GeneratePodcastProps> = ({
   audioPrompt,
   setAudioPrompt,
   audio,
-
+  voiceType,
 }) => {
   const [isAiAudio, setIsAiAudio] = useState(false);
   const [isAudioLoading, setIsAudioLoading] = useState(false);
@@ -182,15 +183,24 @@ const GeneratePodcast: React.FC<GeneratePodcastProps> = ({
   };
 
   const generateAudio = async () => {
+    if (!audioPrompt || audioPrompt.trim() === "") {
+      toast({
+        title: "Please provide an audio prompt",
+        variant: "destructive",
+      });
+      return;
+    }
+  
     try {
-      const response = await handleGenerateAudio({ audio: audioPrompt  });
+      const response = await handleGenerateAudio({ input: audioPrompt, voice: voiceType });
       const blob = new Blob([response], { type: 'audio/mpeg' });
       handleAudio(blob, `podcast-${uuidv4()}`);
     } catch (error) {
       console.log(error);
       toast({ title: 'Error generating audio', variant: 'destructive' });
     }
-  };
+  };  
+  
 
   const uploadAudio = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -215,7 +225,9 @@ const GeneratePodcast: React.FC<GeneratePodcastProps> = ({
           type="button"
           variant="plain"
           onClick={() => setIsAiAudio(true)}
-          className={isAiAudio ? 'bg-black-6' : ''}
+          className={cn('', {
+            'bg-black-6': isAiAudio
+          })}
         >
           Use AI to generate Podcast
         </Button>
@@ -223,7 +235,9 @@ const GeneratePodcast: React.FC<GeneratePodcastProps> = ({
           type="button"
           variant="plain"
           onClick={() => setIsAiAudio(false)}
-          className={!isAiAudio ? 'bg-black-6' : ''}
+          className={cn('', {
+            'bg-black-6': !isAiAudio
+          })}
         >
           Upload custom audio
         </Button>
