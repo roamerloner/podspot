@@ -116,21 +116,21 @@
 
 // export default GeneratePodcast
 
-import { GeneratePodcastProps } from '@/types'
-import React, { useRef, useState } from 'react';
-import { Button } from './ui/button';
-import { Textarea } from './ui/textarea';
-import { Input } from './ui/input';
-import { useToast } from "@/components/ui/use-toast"
-import { useAction, useMutation } from 'convex/react';
-import { useUploadFiles } from '@xixixao/uploadstuff/react';
-import { api } from '@/convex/_generated/api';
-import { v4 as uuidv4 } from 'uuid';
-import { Label } from './ui/label';
-import { Loader } from 'lucide-react';
-import Image from 'next/image';
-import { voiceDetails } from '@/constants';
-import { cn } from '@/lib/utils';
+// import { GeneratePodcastProps } from '@/types'
+// import React, { useRef, useState } from 'react';
+// import { Button } from './ui/button';
+// import { Textarea } from './ui/textarea';
+// import { Input } from './ui/input';
+// import { useToast } from "@/components/ui/use-toast"
+// import { useAction, useMutation } from 'convex/react';
+// import { useUploadFiles } from '@xixixao/uploadstuff/react';
+// import { api } from '@/convex/_generated/api';
+// import { v4 as uuidv4 } from 'uuid';
+// import { Label } from './ui/label';
+// import { Loader } from 'lucide-react';
+// import Image from 'next/image';
+// import { voiceDetails } from '@/constants';
+// import { cn } from '@/lib/utils';
 
 // interface GeneratePodcastProps {
 //   setAudio: React.Dispatch<React.SetStateAction<string>>;
@@ -141,30 +141,240 @@ import { cn } from '@/lib/utils';
 // } 
 
 
-const GeneratePodcast: React.FC<GeneratePodcastProps> = ({
+// const GeneratePodcast: React.FC<GeneratePodcastProps> = ({
+//   setAudio,
+//   setAudioStorageId,
+//   audioPrompt,
+//   setAudioPrompt,
+//   audio,
+//   voiceType,
+// }) => {
+//   const [isAiAudio, setIsAiAudio] = useState(false);
+//   const [isAudioLoading, setIsAudioLoading] = useState(false);
+//   const audioRef = useRef<HTMLInputElement>(null);
+//   const { toast } = useToast();
+
+//   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
+//   const { startUpload } = useUploadFiles(generateUploadUrl);
+//   const getAudioUrl = useMutation(api.podcasts.getUrl);
+//   const handleGenerateAudio = useAction(api.elevenlabs.generateAudioAction);
+
+//   const handleAudio = async (blob: Blob, fileName: string) => {
+//     setIsAudioLoading(true);
+//     setAudio('');
+
+//     try {
+//       const file = new File([blob], fileName, { type: 'audio/mpeg' });
+//       const uploaded = await startUpload([file]);
+//       const storageId = (uploaded[0].response as any).storageId;
+
+//       setAudioStorageId(storageId);
+
+//       const audioUrl = await getAudioUrl({ storageId });
+//       setAudio(audioUrl!);
+//       setIsAudioLoading(false);
+//       toast({
+//         title: "Podcast audio generated/uploaded successfully",
+//       });
+//     } catch (error) {
+//       console.log(error);
+//       toast({ title: 'Error generating/uploading audio', variant: 'destructive' });
+//     }
+//   };
+
+//   const generateAudio = async () => {
+//     if (!audioPrompt || audioPrompt.trim() === "") {
+//       toast({
+//         title: "Please provide an audio prompt",
+//         variant: "destructive",
+//       });
+//       return;
+//     }
+  
+//     try {
+//       const response = await handleGenerateAudio({ input: audioPrompt, voice: voiceType });
+//       const blob = new Blob([response], { type: 'audio/mpeg' });
+//       handleAudio(blob, `podcast-${uuidv4()}`);
+//     } catch (error) {
+//       console.log(error);
+//       toast({ title: 'Error generating audio', variant: 'destructive' });
+//     }
+//   };  
+  
+
+//   const uploadAudio = async (e: React.ChangeEvent<HTMLInputElement>) => {
+//     e.preventDefault();
+
+//     try {
+//       const files = e.target.files;
+//       if (!files) return;
+//       const file = files[0];
+//       const blob = await file.arrayBuffer().then((ab) => new Blob([ab]));
+
+//       handleAudio(blob, file.name);
+//     } catch (error) {
+//       console.log(error);
+//       toast({ title: 'Error uploading audio', variant: 'destructive' });
+//     }
+//   };
+
+//   return (
+//     <>
+//       <div className="generate_podcast">
+//         <Button
+//           type="button"
+//           variant="plain"
+//           onClick={() => setIsAiAudio(true)}
+//           className={cn('', {
+//             'bg-black-6': isAiAudio
+//           })}
+//         >
+//           Use AI to generate Podcast
+//         </Button>
+//         <Button
+//           type="button"
+//           variant="plain"
+//           onClick={() => setIsAiAudio(false)}
+//           className={cn('', {
+//             'bg-black-6': !isAiAudio
+//           })}
+//         >
+//           Upload custom audio
+//         </Button>
+//       </div>
+//       {isAiAudio ? (
+//         <div className="flex flex-col gap-5">
+//           <div className="mt-5 flex flex-col gap-2.5">
+//             <Label className="text-16 font-bold text-white-1">
+//               AI Prompt to generate Podcast
+//             </Label>
+//             <Textarea
+//               className="input-class font-light focus-visible:ring-offset-orange-1"
+//               placeholder='Provide text to generate podcast audio'
+//               rows={5}
+//               value={audioPrompt}
+//               onChange={(e) => setAudioPrompt(e.target.value)}
+//             />
+//           </div>
+//           <div className="w-full max-w-[200px]">
+//             <Button
+//               type="submit"
+//               className="text-16 bg-red-500 py-4 font-bold text-white-1"
+//               onClick={generateAudio}
+//             >
+//               {isAudioLoading ? (
+//                 <>
+//                   Generating
+//                   <Loader size={20} className="animate-spin ml-2" />
+//                 </>
+//               ) : (
+//                 'Generate'
+//               )}
+//             </Button>
+//           </div>
+//         </div>
+//       ) : (
+//         <div className="image_div" onClick={() => audioRef?.current?.click()}>
+//           <Input
+//             type="file"
+//             className="hidden"
+//             ref={audioRef}
+//             onChange={(e) => uploadAudio(e)}
+//           />
+//          {!isAudioLoading ? (
+//             <Image src="/icons/upload-image.svg" width={40} height={40} alt="upload" />
+//           ): (
+//             <div className="text-16 flex-center font-medium text-white-1">
+//               Uploading
+//               <Loader size={20} className="animate-spin ml-2" />
+//             </div>
+//           )}
+//           <div className="flex flex-col items-center gap-1">
+//             <h2 className="text-12 font-bold text-red-500">
+//               Click to upload
+//             </h2>
+//             <p className="text-12 font-normal text-gray-1">MP3, WAV (max. 100MB)</p>
+//           </div>
+//         </div>
+//       )}
+//       {audio && (
+//         <div className="flex-center w-full">
+//           <audio controls src={audio} className="mt-5">
+//             Your browser does not support the audio element.
+//           </audio>
+//         </div>
+//       )}
+//     </>
+//   );
+// };
+
+// export default GeneratePodcast;
+
+//This code is new one, from Billy
+
+import { GeneratePodcastProps } from '@/types';
+import React, { useState, useRef } from 'react';
+import { Label } from './ui/label';
+import { Textarea } from './ui/textarea';
+import { Button } from './ui/button';
+import { Loader } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { v4 as uuidv4 } from 'uuid';
+import { useUploadFiles } from '@xixixao/uploadstuff/react';
+import Image from 'next/image';
+import { cn } from '@/lib/utils';
+import { Input } from './ui/input';
+
+const useGeneratePodcast = ({
   setAudio,
-  setAudioStorageId,
-  audioPrompt,
-  setAudioPrompt,
-  audio,
-  voiceType,
-}) => {
-  const [isAiAudio, setIsAiAudio] = useState(false);
-  const [isAudioLoading, setIsAudioLoading] = useState(false);
-  const audioRef = useRef<HTMLInputElement>(null);
+   setAudioStorageId,
+   audioPrompt,
+   setAudioPrompt,
+   audio,
+   voiceType,
+}: GeneratePodcastProps) => {
+  const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
 
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
   const { startUpload } = useUploadFiles(generateUploadUrl);
   const getAudioUrl = useMutation(api.podcasts.getUrl);
-  const handleGenerateAudio = useAction(api.elevenlabs.generateAudioAction);
 
-  const handleAudio = async (blob: Blob, fileName: string) => {
-    setIsAudioLoading(true);
+  const generatePodcast = async () => {
+    setIsGenerating(true);
     setAudio('');
 
+    if (!audioPrompt) {
+      toast({
+        title: 'Please provide a voice prompt to generate a podcast',
+        variant: 'destructive',
+      });
+      setIsGenerating(false);
+      return;
+    }
+
     try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/elevenlabs`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          input: audioPrompt,
+          voice: voiceType,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate audio');
+      }
+
+      const blob = await response.blob(); // Convert the response to a Blob
+      const fileName = `podcast-${uuidv4()}.mp3`;
       const file = new File([blob], fileName, { type: 'audio/mpeg' });
+
       const uploaded = await startUpload([file]);
       const storageId = (uploaded[0].response as any).storageId;
 
@@ -172,61 +382,78 @@ const GeneratePodcast: React.FC<GeneratePodcastProps> = ({
 
       const audioUrl = await getAudioUrl({ storageId });
       setAudio(audioUrl!);
-      setIsAudioLoading(false);
+
       toast({
-        title: "Podcast audio generated/uploaded successfully",
+        title: 'Podcast generated successfully',
       });
     } catch (error) {
-      console.log(error);
-      toast({ title: 'Error generating/uploading audio', variant: 'destructive' });
+      console.error('Error generating podcast', error);
+      toast({
+        title: 'Error creating a podcast',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsGenerating(false);
     }
   };
 
-  const generateAudio = async () => {
-    if (!audioPrompt || audioPrompt.trim() === "") {
-      toast({
-        title: "Please provide an audio prompt",
-        variant: "destructive",
-      });
-      return;
-    }
-  
-    try {
-      const response = await handleGenerateAudio({ input: audioPrompt, voice: voiceType });
-      const blob = new Blob([response], { type: 'audio/mpeg' });
-      handleAudio(blob, `podcast-${uuidv4()}`);
-    } catch (error) {
-      console.log(error);
-      toast({ title: 'Error generating audio', variant: 'destructive' });
-    }
-  };  
-  
+  return { isGenerating, generatePodcast };
+};
+
+const GeneratePodcast: React.FC<GeneratePodcastProps> = (props) => {
+  const { isGenerating, generatePodcast } = useGeneratePodcast(props);
+  const [isAiAudio, setIsAiAudio] = useState(false);
+  const audioRef = useRef<HTMLInputElement | null>(null);
+  const { toast } = useToast();
+  const [isAudioLoading, setIsAudioLoading] = useState(false);
 
   const uploadAudio = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+    setIsAudioLoading(true);
 
     try {
       const files = e.target.files;
       if (!files) return;
-      const file = files[0];
-      const blob = await file.arrayBuffer().then((ab) => new Blob([ab]));
 
-      handleAudio(blob, file.name);
+      const file = files[0];
+      const blob = new Blob([await file.arrayBuffer()]);
+      const fileName = file.name;
+
+      const generateUploadUrl = useMutation(api.files.generateUploadUrl);
+      const { startUpload } = useUploadFiles(generateUploadUrl);
+
+      const uploaded = await startUpload([new File([blob], fileName, { type: file.type })]);
+      const storageId = (uploaded[0].response as any).storageId;
+
+      props.setAudioStorageId(storageId);
+
+      const getAudioUrl = useMutation(api.podcasts.getUrl);
+      const audioUrl = await getAudioUrl({ storageId });
+      props.setAudio(audioUrl!);
+
+      toast({
+        title: 'Audio uploaded successfully',
+      });
     } catch (error) {
-      console.log(error);
-      toast({ title: 'Error uploading audio', variant: 'destructive' });
+      console.error('Error uploading audio', error);
+      toast({
+        title: 'Error uploading audio',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsAudioLoading(false);
     }
   };
 
   return (
-    <>
-      <div className="generate_podcast">
+    <div>
+      <div className="generate_podcast flex gap-3">
         <Button
           type="button"
           variant="plain"
           onClick={() => setIsAiAudio(true)}
           className={cn('', {
-            'bg-black-6': isAiAudio
+            'bg-black-6': isAiAudio,
           })}
         >
           Use AI to generate Podcast
@@ -236,12 +463,13 @@ const GeneratePodcast: React.FC<GeneratePodcastProps> = ({
           variant="plain"
           onClick={() => setIsAiAudio(false)}
           className={cn('', {
-            'bg-black-6': !isAiAudio
+            'bg-black-6': !isAiAudio,
           })}
         >
           Upload custom audio
         </Button>
       </div>
+
       {isAiAudio ? (
         <div className="flex flex-col gap-5">
           <div className="mt-5 flex flex-col gap-2.5">
@@ -250,19 +478,19 @@ const GeneratePodcast: React.FC<GeneratePodcastProps> = ({
             </Label>
             <Textarea
               className="input-class font-light focus-visible:ring-offset-orange-1"
-              placeholder='Provide text to generate podcast audio'
+              placeholder="Provide text to generate podcast audio"
               rows={5}
-              value={audioPrompt}
-              onChange={(e) => setAudioPrompt(e.target.value)}
+              value={props.voicePrompt}
+              onChange={(e) => props.setVoicePrompt(e.target.value)}
             />
           </div>
           <div className="w-full max-w-[200px]">
             <Button
               type="submit"
               className="text-16 bg-red-500 py-4 font-bold text-white-1"
-              onClick={generateAudio}
+              onClick={generatePodcast}
             >
-              {isAudioLoading ? (
+              {isGenerating ? (
                 <>
                   Generating
                   <Loader size={20} className="animate-spin ml-2" />
@@ -281,30 +509,29 @@ const GeneratePodcast: React.FC<GeneratePodcastProps> = ({
             ref={audioRef}
             onChange={(e) => uploadAudio(e)}
           />
-         {!isAudioLoading ? (
+          {!isAudioLoading ? (
             <Image src="/icons/upload-image.svg" width={40} height={40} alt="upload" />
-          ): (
+          ) : (
             <div className="text-16 flex-center font-medium text-white-1">
               Uploading
               <Loader size={20} className="animate-spin ml-2" />
             </div>
           )}
           <div className="flex flex-col items-center gap-1">
-            <h2 className="text-12 font-bold text-red-500">
-              Click to upload
-            </h2>
+            <h2 className="text-12 font-bold text-red-500">Click to upload</h2>
             <p className="text-12 font-normal text-gray-1">MP3, WAV (max. 100MB)</p>
           </div>
         </div>
       )}
-      {audio && (
+
+      {props.audio && (
         <div className="flex-center w-full">
-          <audio controls src={audio} className="mt-5">
+          <audio controls src={props.audio} className="mt-5">
             Your browser does not support the audio element.
           </audio>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
