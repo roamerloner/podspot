@@ -32,7 +32,7 @@ export interface PodcastProps {
   user: Id<"users">;
   podcastTitle: string;
   podcastDescription: string;
-  audioUrl: string | "";
+  audioUrl: string | null;
   imageUrl: string | "";
   imageStorageId: Id<"_storage"> | "";
   author: string;
@@ -55,12 +55,12 @@ export interface GeneratePodcastProps {
   voiceType: string;
   setAudio: Dispatch<SetStateAction<string>>;
   audio: string;
-  setAudioStorageId: Dispatch<SetStateAction<Id<"_storage"> | "">>;
+  setAudioStorageId: Dispatch<SetStateAction<Id<"_storage"> | null>>;
   voicePrompt: string;
   setVoicePrompt: Dispatch<SetStateAction<string>>;
   setAudioDuration: Dispatch<SetStateAction<number>>;
-  audioPrompt: string;
-  setAudioPrompt: React.Dispatch<React.SetStateAction<string>>;
+  // audioPrompt: string;
+  // setAudioPrompt: React.Dispatch<React.SetStateAction<string>>;
 }
 
 //This is another persons type
@@ -77,7 +77,7 @@ export interface GeneratePodcastProps {
 
 export interface GenerateThumbnailProps {
   setImage: Dispatch<SetStateAction<string>>;
-  setImageStorageId: Dispatch<SetStateAction<Id<"_storage"> | "">>;
+  setImageStorageId: Dispatch<SetStateAction<Id<"_storage"> | null>>;
   image: string;
   imagePrompt: string;
   setImagePrompt: Dispatch<SetStateAction<string>>;
@@ -116,7 +116,7 @@ export interface AudioProps {
 }
 
 export interface AudioContextType {
-  audio: AudioProps | "";
+  audio: AudioProps | undefined;
   setAudio: React.Dispatch<React.SetStateAction<AudioProps |"">>;
 }
 

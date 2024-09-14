@@ -4,6 +4,7 @@ import { Readable } from "stream";
 
 export const POST = async (request: Request) => {
     try{
+        console.log("API called");
         const { input, voice } = await request.json();
 
         const elevenlabs = new ElevenLabsClient({
@@ -15,7 +16,7 @@ export const POST = async (request: Request) => {
             text: input,
             model_id: "eleven_monolingual_v1",
         });
-
+        console.log("Audio response received:", audioResponse);
         const readableAudio = Readable.from(audioResponse);
         const chunks = [];
 

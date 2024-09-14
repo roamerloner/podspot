@@ -35,7 +35,7 @@ import { useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { useRouter } from "next/navigation"
 
-const voiceCategories = ['alloy', 'shimmer', 'nova', 'echo', 'fable', 'onyx'];
+const voiceCategories = ['Rachel', 'Drew'];
 
 const formSchema = z.object({
   podcastTitle: z.string().min(2),
@@ -56,7 +56,7 @@ const CreatePodcast = () => {
   const [voicePrompt, setVoicePrompt] = useState('');
   
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [audioPrompt, setAudioPrompt] = useState('');
+  // const [audioPrompt, setAudioPrompt] = useState('');
 
   const createPodcast = useMutation(api.podcasts.createPodcast)
 
@@ -73,6 +73,11 @@ const CreatePodcast = () => {
   async function onSubmit(data: z.infer<typeof formSchema>) {
     try {
       setIsSubmitting(true);
+      
+      console.log("audioUrl:", audioUrl);
+      console.log("imageUrl:", imageUrl);
+      console.log("voiceType:", voiceType);
+
       if(!audioUrl || !imageUrl || !voiceType) {
         toast({
           title: 'Please generate audio and image',
@@ -177,7 +182,6 @@ const CreatePodcast = () => {
                 voicePrompt={voicePrompt}
                 setVoicePrompt={setVoicePrompt}
                 setAudioDuration={setAudioDuration}
-                setAudioPrompt={setAudioPrompt}
               />
 
               <GenerateThumbnail 

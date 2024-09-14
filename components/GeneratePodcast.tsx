@@ -332,8 +332,8 @@ import { cn } from '@/lib/utils';
 const GeneratePodcast: React.FC<GeneratePodcastProps> = ({
   setAudio,
   setAudioStorageId,
-  audioPrompt,
-  setAudioPrompt,
+  voicePrompt,
+  setVoicePrompt,
   audio,
   voiceType,
 }) => {
@@ -341,6 +341,7 @@ const GeneratePodcast: React.FC<GeneratePodcastProps> = ({
   const [isAudioLoading, setIsAudioLoading] = useState(false);
   const audioRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
 
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
   const { startUpload } = useUploadFiles(generateUploadUrl);
@@ -353,26 +354,43 @@ const GeneratePodcast: React.FC<GeneratePodcastProps> = ({
 
     try {
       const file = new File([blob], fileName, { type: 'audio/mpeg' });
+      console.log("Uploading file:", fileName);
+
       const uploaded = await startUpload([file]);
+      if (!uploaded || !uploaded[0] || !uploaded[0].response) {
+        throw new Error('File upload failed');
+      }
+
       const storageId = (uploaded[0].response as any).storageId;
+      console.log("Generated Storage ID:", storageId);
 
       setAudioStorageId(storageId);
 
       const audioUrl = await getAudioUrl({ storageId });
+      console.log("Generated Audio URL:", audioUrl);
+
+      if (!audioUrl) {
+        throw new Error("Failed to retrieve audio URL");
+      }
+
       setAudio(audioUrl!);
       setIsAudioLoading(false);
       toast({
-        title: "Podcast audio generated/uploaded successfully",
+        title: "Podcast audio generated successfully",
       });
     } catch (error) {
       console.log(error);
-      toast({ title: 'Error generating/uploading audio', variant: 'destructive' });
+      toast({ title: 'Error generating audio', variant: 'destructive' });
     }
   };
 
   // Function to generate audio using ElevenLabs API
   const generateAudio = async () => {
-    if (!audioPrompt || audioPrompt.trim() === "") {
+    if (!voiceType || !voicePrompt) {
+      console.log("Voice type or prompt missing");
+      return;
+    }
+    if (!voicePrompt || voicePrompt.trim() === "") {
       toast({
         title: "Please provide an audio prompt",
         variant: "destructive",
@@ -386,11 +404,11 @@ const GeneratePodcast: React.FC<GeneratePodcastProps> = ({
       const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/elevenlabs`, {
         method: 'POST',
         body: JSON.stringify({
-          input: audioPrompt,
-          voice: voiceType
+          input: voicePrompt,
+          voice: voiceType,
       })
       })
-
+           
       if (!response.ok) {
         throw new Error('Error generating audio from ElevenLabs API');
       }
@@ -455,8 +473,8 @@ const GeneratePodcast: React.FC<GeneratePodcastProps> = ({
               className="input-class font-light focus-visible:ring-offset-orange-1"
               placeholder='Provide text to generate podcast audio'
               rows={5}
-              value={audioPrompt}
-              onChange={(e) => setAudioPrompt(e.target.value)}
+              value={voicePrompt}
+              onChange={(e) => setVoicePrompt(e.target.value)}
             />
           </div>
           <div className="w-full max-w-[200px]">
@@ -502,7 +520,7 @@ const GeneratePodcast: React.FC<GeneratePodcastProps> = ({
       )}
       {audio && (
         <div className="flex-center w-full">
-          <audio controls src={audio} className="mt-5">
+          <audio controls src={audio} autoPlay className="mt-5">
             Your browser does not support the audio element.
           </audio>
         </div>
